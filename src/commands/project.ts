@@ -51,7 +51,7 @@ project.create = (project_name) => {
                                     url: 'system.netsuite.com',
                                     version: '1.0.0',
                                     env: 'testing',
-                                    company_abbreviation: answer.abbr
+                                    prefix: answer.abbr
                                 }
                                 fs.writeFile(path.join('.', 'config.json'), JSON.stringify(config, null, 4), 'utf8', (err) => { });
                                 //se se selecciona agregar el tracking a un remote entonces se pregunta por la url para ejecutar el comando de git
@@ -59,12 +59,12 @@ project.create = (project_name) => {
                                     inquirer.prompt({
                                         type: 'input',
                                         name: 'url',
-                                        message: "Cuál es la URL del remoto a seguir",
+                                        message: "Cuál es la URL del remoto a seguir: ",
                                         validate: (value) => {
                                             if (!value) return 'La url no puede ser una cadena vacia';
                                             return true;
                                         }
-                                    }).then(answer => child_process.spawn(`git remote add ${answer.url}`, { stdio: 'inherit', shell: true }));
+                                    }).then(answer => child_process.spawn(`git remote add origin ${answer.url}`, { stdio: 'inherit', shell: true }));
                                 }
                             });
                         });

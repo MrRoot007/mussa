@@ -28,7 +28,7 @@ const bucket = {
             },
             {
                 type: 'input',
-                name: 'abrr',
+                name: 'abbr',
                 prefix: '👾',
                 message: 'Escribe el prefijo que identificará al cuenta: ',
                 validate: (value: string) => {
