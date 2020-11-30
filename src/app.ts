@@ -11,7 +11,7 @@ const args = minimist(process.argv.slice(2), {
     }
 });
 //se hace limpieza de la consola antes de la ejecución de un comando de mussa
-child_process.spawn(process.platform === 'win32' ? 'cls' : 'clear', { shell: true });
+child_process.spawn(process.platform === 'win32' ? 'cls' : 'clear', { stdio: 'inherit', shell: true });
 
 /**
  * Ejecución de comandos mussa 🐶
