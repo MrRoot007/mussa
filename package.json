@@ -1,0 +1,35 @@
+{
+    "name": "mussa",
+    "version": "1.0.0",
+    "description": "netsuite helper for suiteapp and appcustomization",
+    "main": "dist/app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/raloz/mussa.git"
+    },
+    "keywords": [
+        "netsuite",
+        "suiteapps",
+        "sdfcli"
+    ],
+    "author": "Octavio Quiroz",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/raloz/mussa/issues"
+    },
+    "homepage": "https://github.com/raloz/mussa#readme",
+    "dependencies": {
+        "chalk": "^4.1.0",
+        "inquirer": "^7.3.3",
+        "minimist": "^1.2.5"
+    },
+    "devDependencies": {
+        "@types/inquirer": "^7.3.1",
+        "@types/minimist": "^1.2.1",
+        "@types/node": "^14.14.10",
+        "typedoc": "^0.19.2"
+    }
+}
