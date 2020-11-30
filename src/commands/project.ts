@@ -28,7 +28,7 @@ project.create = (project_name) => {
                     if (code) return;//salida con error del comando SDF createproject
                     process.chdir(path.join(process.cwd(), project_name));//se ingresa al directorio del proyecto recien creado
                     //se ejecuta el comando SDF adddependencies
-                    const add_dependencies = child_process.exec(path.join(bucket.sdfcli, `sdfcli adddependencies -authid mussa -p ${process.cwd()} -feature SERVERSIDESCRIPTING:required CUSTOMRECORDS:required`),);
+                    const add_dependencies = child_process.exec(path.join(bucket.sdfcli, `sdfcli adddependencies -authid mussa -p ${process.cwd()} -feature SERVERSIDESCRIPTING:required CUSTOMRECORDS:required CRM:required`),);
                     add_dependencies?.stdin?.write('YES\n');
                     add_dependencies.on('close', code => {
                         if (code) return;//salida con error del comando SDF adddependencies
