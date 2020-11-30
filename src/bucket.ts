@@ -32,7 +32,7 @@ const bucket = {
                 prefix: '👾',
                 message: 'Escribe el prefijo que identificará al cuenta: ',
                 validate: (value: string) => {
-                    if (value.length != 3) return 'Tamaño no válido, solo tres caracteres son permitidos baboso 🙊';
+                    if (value.length != 3) return 'Tamaño no válido, solo tres caracteres son permitidos';
                     return true;
                 }
             },
