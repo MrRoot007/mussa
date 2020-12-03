@@ -14,7 +14,7 @@ project.create = (project_name) => {
             type: 'list',
             name: 'type',
             prefix: '👾',
-            message: "Selecciona el tipo de proyecto:",
+            message: 'Selecciona el tipo de proyecto:',
             choices: ['ACCOUNTCUSTOMIZATION', 'SUITEAPP'],
         }
     ]).then(answer => {
@@ -39,13 +39,15 @@ project.create = (project_name) => {
                         ).on('close', code => {
                             if (code) return; //salida con error del comando git init
                             //se crea el archivo .gitignore
-                            fs.writeFile(path.join('.', '.gitignore'), 'error.log\nnode_modules\npackage-lock.json\n.vscode', () => { });
-                            //prengutas para inicializar el config.json de mussa y para agregar el traking al remoto
+                            fs.writeFile(path.join('.', '.gitignore'), 'error.log\nnode_modules\npackage-lock.json\n.vscode\nconfig.json', () => { });
+                            //preguntas para inicializar el config.json de mussa y para agregar el traking al remoto
                             inquirer.prompt(bucket.questions.on_create_project).then(answer => {
                                 const config = {
                                     name: project_name,
                                     author: answer.author,
                                     email: answer.email,
+                                    type: 'ACCOUNTCUSTOMIZATION',
+                                    path: `${path.join('FileCabinet', 'SuiteScripts', project_name)}`,
                                     authid: '',
                                     role: 55,
                                     url: 'system.netsuite.com',
@@ -54,12 +56,20 @@ project.create = (project_name) => {
                                     prefix: answer.abbr
                                 }
                                 fs.writeFile(path.join('.', 'config.json'), JSON.stringify(config, null, 4), 'utf8', (err) => { });
-                                //se se selecciona agregar el tracking a un remote entonces se pregunta por la url para ejecutar el comando de git
+                                //se crea el directorio principal donde se guardarán los scripts
+                                fs.mkdirSync(config.path);
+                                //se eliminan directorios que no usan
+                                fs.rmdir(path.join('FileCabinet', 'Templates', 'E-mail Templates'), () => { });
+                                fs.rmdir(path.join('FileCabinet', 'Templates', 'Marketing Templates'), () => { });
+                                fs.rmdir(path.join('FileCabinet', 'Web Site Hosting Files'), () => { });
+                                fs.rmdir(path.join('FileCabinet', 'Templates'), () => { });
+                                fs.rmdir('Translations', () => { });
+                                //si se selecciona agregar el tracking a un remoto entonces se pregunta por la url para ejecutar el comando de git
                                 if (answer.remote) {
                                     inquirer.prompt({
                                         type: 'input',
                                         name: 'url',
-                                        message: "Cuál es la URL del remoto a seguir: ",
+                                        message: 'Cuál es la URL del remoto a seguir: ',
                                         validate: (value) => {
                                             if (!value) return 'La url no puede ser una cadena vacia';
                                             return true;
