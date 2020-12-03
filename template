@@ -1,0 +1,20 @@
+/**
+ * @author {author} <{author_email}> 
+ * @Name {script_name}
+ * @created {date_created}
+ * @description {description}
+ * @NUpdated  
+ * @NApiVersion {api_version}
+ * @NScriptType {script_type}
+ */
+
+define([], function () {
+    const entry_point = {
+        {entry_point}
+    };
+
+    {entry_point_functions}
+    return entry_point;
+
+    //below here write some cool functions ↓↓↓↓↓↓
+});
