@@ -1,0 +1,75 @@
+{
+    "scheduled": {
+        "name": "ScheduledScript",
+        "entry_points": [
+            "execute"
+        ],
+        "abbreviation": "sc",
+        "latest_version": "2.1"
+    },
+    "userevent": {
+        "name": "UserEventScript",
+        "entry_points": [
+            "beforeLoad",
+            "beforeSubmit",
+            "afterSubmit"
+        ],
+        "abbreviation": "ue",
+        "latest_version": "2.1"
+    },
+    "client": {
+        "name": "ClientScript",
+        "entry_points": [
+            "fieldChanged",
+            "lineInit",
+            "pageInit",
+            "postSourcing",
+            "saveRecord",
+            "sublistChanged",
+            "validateDelete",
+            "validateField",
+            "validateInsert",
+            "validateLine"
+        ],
+        "abbreviation": "cs",
+        "latest_version": "2.0"
+    },
+    "mapreduce": {
+        "name": "MapreduceScript",
+        "entry_points": [
+            "getInputData",
+            "map",
+            "reduce",
+            "summarize"
+        ],
+        "abbreviation": "mr",
+        "latest_version": "2.1"
+    },
+    "restlet": {
+        "name": "Restlet",
+        "entry_points": [
+            "get",
+            "post",
+            "put",
+            "delete"
+        ],
+        "abbreviation": "rl",
+        "latest_version": "2.1"
+    },
+    "suitelet": {
+        "name": "Suitelet",
+        "entry_points": [
+            "onRequest"
+        ],
+        "abbreviation": "sl",
+        "latest_version": "2.1"
+    },
+    "library": {
+        "name": "CustomLibary",
+        "entry_points": [
+            "execute"
+        ],
+        "abbreviation": "lb",
+        "latest_version": "2.1"
+    }
+}
