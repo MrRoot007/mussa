@@ -39,7 +39,7 @@ project.create = (project_name) => {
                         ).on('close', code => {
                             if (code) return; //salida con error del comando git init
                             //se crea el archivo .gitignore
-                            fs.writeFile(path.join('.', '.gitignore'), 'error.log\nnode_modules\npackage-lock.json\n.vscode\nconfig.json', () => { });
+                            fs.writeFile(path.join('.', '.gitignore'), 'error.log\nnode_modules/\npackage-lock.json\n.vscode/\nconfig.json', () => { });
                             //preguntas para inicializar el config.json de mussa y para agregar el traking al remoto
                             inquirer.prompt(bucket.questions.on_create_project).then(answer => {
                                 const config = {
@@ -52,7 +52,7 @@ project.create = (project_name) => {
                                     role: 55,
                                     url: 'system.netsuite.com',
                                     version: '1.0.0',
-                                    env: 'testing',
+                                    production: false,
                                     prefix: answer.abbr
                                 }
                                 fs.writeFile(path.join('.', 'config.json'), JSON.stringify(config, null, 4), 'utf8', (err) => { });
