@@ -13,7 +13,7 @@ define([], function () {
         {entry_point}
     };
 
-    {entry_point_functions}
+{entry_point_functions}
     return entry_point;
 
     //below here write some cool functions ↓↓↓↓↓↓
