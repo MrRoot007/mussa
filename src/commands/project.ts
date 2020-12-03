@@ -52,7 +52,7 @@ project.create = (project_name) => {
                                     role: 55,
                                     url: 'system.netsuite.com',
                                     version: '1.0.0',
-                                    production: false,
+                                    released: false,
                                     prefix: answer.abbr
                                 }
                                 fs.writeFile(path.join('.', 'config.json'), JSON.stringify(config, null, 4), 'utf8', (err) => { });
