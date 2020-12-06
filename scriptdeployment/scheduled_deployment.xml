@@ -4,9 +4,9 @@
     <isdeployed>T</isdeployed>
     <loglevel>DEBUG</loglevel>
     <queueallstagesatonce>T</queueallstagesatonce>
-    <runasrole>ADMINISTRATOR</runasrole>
+    <runasrole></runasrole>
     <status>NOTSCHEDULED</status>
-    <title>sup yo</title>
+    <title>{title}</title>
     <yieldaftermins>60</yieldaftermins>
     <recurrence>
         <daily>
