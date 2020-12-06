@@ -1,5 +1,5 @@
 <restlet scriptid="customscript_{scriptid}">
-    <description>{{description}</description>
+    <description>{description}</description>
     <isinactive>F</isinactive>
     <name>{name}</name>
     <notifyowner>T</notifyowner>
