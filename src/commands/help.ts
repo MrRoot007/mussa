@@ -14,7 +14,8 @@ y procesos que no están incluidos en el sdfcli o simplemente enlanzado comandos
     > mussa [-u] --upload <ruta del archivo>            cargar un archivo al FileCabinet de Netusite 
     > mussa [-d] --deploy                               despliegue de un proyecto SDF a la base de Nesuite configurada
 `
-    console.log(message);
+    process.stdout.write(message);
+    process.exit(0);
 }
 
 export default help;
