@@ -7,7 +7,7 @@ const mussa_path = path.dirname(mainfile).replace('dist', '');
 const bucket = {
     sdfcli: path.join(mussa_path, 'sdfcli', platform),
     suitescripts: path.join(mussa_path, 'suitescripts.json'),
-    records: path.join(mussa_path, 'record.json'),
+    records: path.join(mussa_path, 'records.json'),
     template: path.join(mussa_path, 'template'),
     customscript: path.join(mussa_path, 'customscript'),
     scriptdeployment: path.join(mussa_path, 'scriptdeployment'),
