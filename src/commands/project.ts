@@ -82,12 +82,13 @@ project.create = (project_name) => {
                 });
                 break;
             }
-            case 'suiteapp': {
+            case 'SUITEAPP': {
                 //TODO crear suiteapp
                 console.log('Aún no es posible crear suiteapps, pero estamos trabajando 👷‍♂️🛠');
                 break;
             }
         }
+        process.exit(0);//salida del script con éxito
     });
 };
 
