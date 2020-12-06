@@ -1,8 +1,8 @@
 import inquirer from 'inquirer';
-import child_process from 'child_process';
 import path from 'path';
 import fs from 'fs';
 import bucket from '../bucket';
+import { script_record } from '../interfaces/script_record';
 
 const scripts = {
     create: (): void => { }
@@ -44,8 +44,8 @@ scripts.create = () => {
             inquirer.prompt(bucket.questions.on_create_script).then(answer => {
                 script.name = `${config.prefix}_${script.abbreviation}_${answer.name.replace(/\s/g, '_')}.js`;
                 script.description = answer.description;
-                script.script_record = `${config.prefix}|${script.abbreviation}|${answer.name.replace(/\.js/, '')}`.toUpperCase();
-                script.id = answer.name.replace(/([a-z]{3}_|\.js)/g, '').substr(0, 28);
+                script.script_record = `${config.prefix}|${script.abbreviation}|${answer.name.replace(/\_/g, ' ').replace(/\.js/, '')}`.toUpperCase();
+                script.id = `${script.abbreviation}_${answer.name.replace(/([a-z]{3}_|\.js)/g, '').substr(0, 28)}`;
 
                 let template_script = fs.readFileSync(bucket.template, 'utf-8'); //se carga el template de scripts
                 template_script = template_script.replace('{author}', script.author)
@@ -65,29 +65,30 @@ scripts.create = () => {
                     switch (script.record) {
                         case 'restlet':
                         case 'suitelet': {
-                            let customscript = fs.readFileSync(path.join(bucket.customscript, `${script.record}.xml`), 'utf-8');
-                            let scriptdeployment = fs.readFileSync(path.join(bucket.scriptdeployment, 'scriptdeployment.xml'), 'utf-8');
-                            scriptdeployment = scriptdeployment
-                                .replace('{deploy}', `${script.id}_1`)
-                                .replace('{recordtype}', '')
-                                .replace('{env}', config.released ? 'RELEASED' : 'TESTING')
-                                .replace('{title}', '<title>sup yo</title>');
-                            customscript = customscript
-                                .replace('{name}', script.script_record)
-                                .replace('{scriptid}', script.id)
-                                .replace('{description}', script.description)
-                                .replace('{path}', `${config.path.replace(/\\/g, '/').replace('FileCabinet', '')}/${script.name}`);
-
-                            //se completa el custonscript con su script record ya llenado
-                            customscript = customscript.replace('{scriptdeployment}', scriptdeployment);
-                            //se crea la carpeta suctonscript si aun no existe
-                            if (!fs.existsSync(path.join(process.cwd(), 'Objects', 'customscript'))) fs.mkdirSync(path.join(process.cwd(), 'Objects', 'customscript'));
-                            //se escribe el archivo customscript xml
-                            fs.writeFile(path.join(process.cwd(), 'Objects', 'customscript', `customscript_${script.id}.xml`), customscript, 'utf8', (err) => { });
+                            create_script_deployment({
+                                id: script.id,
+                                name: script.script_record,
+                                script_type: script.record,
+                                is_released: config.released,
+                                description: script.description,
+                                path: `${config.path.replace(/\\/g, '/').replace('FileCabinet', '')}/${script.name}`,
+                                deployment: fs.readFileSync(path.join(bucket.scriptdeployment, 'event_deployment.xml'), 'utf-8'),
+                                apply_to: [''],
+                            });
                             break;
                         }
                         case 'mapreduce':
                         case 'scheduled': {
+                            create_script_deployment({
+                                id: script.id,
+                                name: script.script_record,
+                                script_type: script.record,
+                                is_released: config.released,
+                                description: script.description,
+                                path: `${config.path.replace(/\\/g, '/').replace('FileCabinet', '')}/${script.name}`,
+                                deployment: fs.readFileSync(path.join(bucket.scriptdeployment, 'scheduled_deployment.xml'), 'utf-8'),
+                                apply_to: [''],
+                            });
                             break;
                         }
                         case 'client':
@@ -101,13 +102,21 @@ scripts.create = () => {
                                     message: "Selecciona el tipo de record donde se desplegará el script: ",
                                     choices: JSON.parse(fs.readFileSync(bucket.records, 'utf-8')).concat([new inquirer.Separator()]),
                                     validate: (value) => {
-                                        if (!value.length) return 'El valor es obligatorio!...';
+                                        if (!value.length) return 'Selecciona al menos un record!...';
                                         return true;
                                     }
                                 }
                             ]).then(answer => {
-                                let customscript = fs.readFileSync(path.join(bucket.customscript, `${script.record}.xml`), 'utf-8');
-                                let scriptdeployment = fs.readFileSync(path.join(bucket.scriptdeployment, 'scriptdeployment.xml'), 'utf-8');
+                                create_script_deployment({
+                                    id: script.id,
+                                    name: script.script_record,
+                                    script_type: script.record,
+                                    is_released: config.released,
+                                    description: script.description,
+                                    path: `${config.path.replace(/\\/g, '/').replace('FileCabinet', '')}/${script.name}`,
+                                    deployment: fs.readFileSync(path.join(bucket.scriptdeployment, 'event_deployment.xml'), 'utf-8'),
+                                    apply_to: answer.record,
+                                });
                             });
                             break;
                         }
@@ -115,9 +124,44 @@ scripts.create = () => {
                             break;
                         }
                     }
+                    process.exit(0);
                 }
             });
         });
     });
-}
+};
 export default scripts;
+/**
+ * 
+ * @param {script_record} script
+ * @returns {void}
+ * @description Cargar el archivo de definición custom_script deacuerdo al tipo de script para crear el customscript record junto con el scriptdeployment 
+ */
+function create_script_deployment(script: script_record): void {
+    let custom_script = fs.readFileSync(path.join(bucket.customscript, `${script.script_type}.xml`), 'utf-8');
+    let script_deployment = script.deployment;
+
+    script_deployment = script.apply_to.map((el: any, index: any) => {
+        let record_type = '';
+        if (el !== '') record_type = (el !== 'CUSTOMRECORD') ? `<recordtype>${el}</recordtype>` : '<recordtype>[scriptid=]</recordtype>';
+        let result = script_deployment
+            .replace('{deploy}', `${script.id}_${+1}`)
+            .replace('{recordtype}', record_type)
+            .replace('{env}', script.is_released ? 'RELEASED' : 'TESTING')
+            .replace('{title}', `<title>sup yo ${index + 1}</title>`);
+        return result;
+    }).join('\n');
+
+    custom_script = custom_script
+        .replace('{name}', `${script.name}`)
+        .replace('{scriptid}', `${script.id}`)
+        .replace('{description}', `${script.description}`)
+        .replace('{scriptdeployment}', `${script_deployment}`)
+        .replace('{path}', `${script.path.replace(/\\/g, '/')
+            .replace('FileCabinet', '')}/${script.name}`);
+
+    //se crea la carpeta suctonscript si aun no existe
+    if (!fs.existsSync(path.join(process.cwd(), 'Objects', 'customscript'))) fs.mkdirSync(path.join(process.cwd(), 'Objects', 'customscript'));
+    //se escribe el archivo customscript xml
+    fs.writeFile(path.join(process.cwd(), 'Objects', 'customscript', `customscript_${script.id}.xml`), custom_script, 'utf8', (err) => { });
+}
